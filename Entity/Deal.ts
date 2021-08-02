@@ -1,6 +1,6 @@
 import {Entity, PrimaryGeneratedColumn, Column} from 'typeorm';
 
-@Entity('Deal')
+@Entity('deals')
 export class Deal {
     @PrimaryGeneratedColumn()
     id: number;
@@ -9,7 +9,7 @@ export class Deal {
     title: string;
     
     @Column()
-    date: number;
+    date: string;
 
     @Column()
     amount: number;

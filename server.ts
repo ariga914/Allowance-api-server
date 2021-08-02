@@ -3,6 +3,8 @@ import { createConnection } from "typeorm";
 import { Request, Response } from "express";
 import * as express from "express";
 import * as bodyParser from "body-parser";
+import { getManager } from "typeorm";
+import { Deal } from "./entity/Deal";
 
 const ormOptions: any = {
 	type: 'mysql',
@@ -29,6 +31,33 @@ createConnection(ormOptions)
 		app.get("/", (req, res) => {
 			res.status(200).send("Hi!. My name is Bi");
 		});
+
+        app.get("/list", async(req, res) => {
+            //get a deal repository to perform operations with deal
+            const dealRepository = getManager().getRepository(Deal);
+
+            const deals = await dealRepository.find();
+
+            //return loaded deals
+            res.status(200).send(deals);
+        })
+
+        app.post('/add', async(req, res) => {
+            //prepare output in JSON format
+            const newDeal = {
+                title: req.body.title,
+                date: req.body.date,
+                amount: req.body.amount,
+                type: req.body.type
+            }
+
+            const dealRepository = getManager().getRepository(Deal);
+
+            const deals = await dealRepository.save(newDeal);
+
+            //return loaded users;
+            res.send(deals);
+        })        
 
 		// run app
 		app.listen(4000);
